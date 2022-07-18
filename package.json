@@ -1,6 +1,14 @@
 {
   "name": "root",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "ignoreChanges": [
+    "ignored-file",
+    "**/__tests__/**",
+    "**/*.md"
+  ],
   "devDependencies": {
     "@lough/commitlint-config": "^0.1.1",
     "@lough/eslint-config": "^0.1.0",

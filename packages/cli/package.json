@@ -1,0 +1,37 @@
+{
+  "name": "@lough/build-cli",
+  "version": "0.0.0",
+  "description": "This is a Buid tool docked in lough.",
+  "author": "City <city@nanzc.com>",
+  "license": "MIT",
+  "bin": {
+    "lough-build": "./bin/index.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnCIity/lough-build.git"
+  },
+  "homepage": "https://github.com/AnCIity/lough-build",
+  "bugs": {
+    "url": "https://github.com/AnCIity/lough-build/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node bin/index.js"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "commander": "^9.3.0",
+    "execa": "5.1.1",
+    "ora": "5.4.1"
+  }
+}
