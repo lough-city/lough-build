@@ -6,6 +6,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
+import typescript, { RPT2Options } from 'rollup-plugin-typescript2';
 
 export class RollupInputOptions {
   options: RollupOptions = {};
@@ -40,6 +41,11 @@ export class RollupInputOptions {
       })
     );
 
+    return this;
+  }
+
+  typescript(params: RPT2Options & Record<string, any>) {
+    typescript(params);
     return this;
   }
 
@@ -86,8 +92,27 @@ export class RollupOutputOptions {
     this.options.plugins.push(plugin);
   }
 
-  format(map: (map: typeof FORMAT_TYPE) => FORMAT_TYPE) {
+  format(map: (map: typeof FORMAT_TYPE) => FORMAT_TYPE, dir?: string) {
     this.options.format = map(FORMAT_TYPE);
+    if (dir) {
+      this.options.dir = dir;
+      return this;
+    }
+
+    if (this.options.format === FORMAT_TYPE.es) this.options.dir = 'es';
+    if (this.options.format === FORMAT_TYPE.cjs) this.options.dir = 'lib';
+
+    return this;
+  }
+
+  preserveModules(root = 'src') {
+    this.options.preserveModules = true;
+    this.options.preserveModulesRoot = root;
+    return this;
+  }
+
+  exports(exports: typeof this.options.exports = 'named') {
+    this.options.exports = exports;
     return this;
   }
 
@@ -101,7 +126,7 @@ export class RollupOutputOptions {
     return this;
   }
 
-  assetFileNames(assetFileNames = '[name].[ext]') {
+  assetFileNames(assetFileNames: typeof this.options.assetFileNames = '[name].[ext]') {
     this.options.assetFileNames = assetFileNames;
     return this;
   }
