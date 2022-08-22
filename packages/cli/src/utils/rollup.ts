@@ -1,4 +1,4 @@
-import { OutputOptions, Plugin, rollup, RollupOptions } from 'rollup';
+import { OutputOptions, /* Plugin,  */ rollup, RollupOptions } from 'rollup';
 
 type IOptions = RollupOptions & { output: Array<OutputOptions> };
 
@@ -31,15 +31,15 @@ export default class LoughRollup {
     this.options = options;
   }
 
-  addInputPlugin(plugin: Plugin) {
-    if (!this.options.plugins) {
-      this.options.plugins = [plugin];
-      return this;
-    }
+  // addInputPlugin(plugin: Plugin) {
+  //   if (!this.options.plugins) {
+  //     this.options.plugins = [plugin];
+  //     return this;
+  //   }
 
-    this.options.plugins.push(plugin);
-    return this;
-  }
+  //   this.options.plugins.push(plugin);
+  //   return this;
+  // }
 
   addOutputOption(outputOptions: OutputOptions) {
     if (!this.options.output) {

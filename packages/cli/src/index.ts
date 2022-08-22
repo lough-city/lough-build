@@ -5,6 +5,8 @@ import { readFileSync } from 'fs';
 import init from './commands/init';
 import NpmOperate from '@lough/npm-operate';
 import { RollupInputOptions, RollupOutputOptions } from './utils/rollupConfig';
+import { bundleRequire } from 'bundle-require';
+import { LoughBuildConfig } from './typings/config';
 
 function start() {
   const jsonPath = join(__dirname, '../package.json');
@@ -14,10 +16,17 @@ function start() {
 
   program.command(init.command).description(init.description).action(init.action);
 
-  program.action((...args) => {
+  program.action(async (...args) => {
     const npm = new NpmOperate();
 
     const config = npm.readConfig();
+    const {
+      mod: { default: loughBuildConfig }
+    } = await bundleRequire({
+      filepath: join(process.cwd(), 'lough.build.config.ts')
+    });
+
+    const buildConfig = loughBuildConfig as LoughBuildConfig;
 
     // init
 
@@ -46,18 +55,22 @@ function start() {
 *
 * ${config.name} ${config.version}
 *
-* Copyright 2021-present, ${config.author}, Inc.
+* Copyright 2021-present, ${config.author}.
 * All rights reserved.
 *
 */`;
 
-    const external = ['react', 'react-dom', '@lyrical/js'];
-    const globals = { react: 'React', 'react-dom': 'ReactDOM', '@lyrical/js': 'lyricalJs' };
-    const style = true;
+    const title = config.name
+      .replace('@', '')
+      .replace('/', '-')
+      .replace(/-(\w)/g, (_$0, $1) => $1.toUpperCase())
+      .replace(/([\w])/, (_$0, $1) => $1.toUpperCase());
+
+    const { input, style, globals, external } = buildConfig;
 
     if (config.unpkg) {
       const umdInputOptions = new RollupInputOptions()
-        .input('src/index.umd.ts')
+        .input(input)
         .external(external)
         .image()
         .resolve()
@@ -67,14 +80,14 @@ function start() {
 
       const umdOutputOptions = new RollupOutputOptions()
         .format(map => map.umd)
-        .name(config.title)
+        .name(title)
         .globals(globals)
         .assetFileNames()
-        .file((config.unpkg as string).replace('.min', ''))
+        .file(config.unpkg.replace('.min', ''))
         .banner(banner);
 
       const unpkgInputOptions = new RollupInputOptions()
-        .input('src/index.umd.ts')
+        .input(input)
         .external(external)
         .image()
         .resolve()
@@ -84,7 +97,7 @@ function start() {
 
       const unpkgOutputOptions = new RollupOutputOptions()
         .format(map => map.umd)
-        .name(config.title)
+        .name(title)
         .globals(globals)
         .assetFileNames()
         .file(config.unpkg)
@@ -92,16 +105,22 @@ function start() {
         .terser();
     }
 
-    if (config.main) {
+    // type: commonjs | module | undefined
+    // if(module) es
+    // else if(commonjs) lib if(config.module) es
+    // else lib if(config.module) es
+
+    if (config.main && config.type !== 'module') {
       const cjsInputOptions = new RollupInputOptions()
-        .input(['src/index.ts'])
+        .input([input])
         .external(external)
         .image()
         .resolve()
         .babel()
         .commonjs();
       if (style) cjsInputOptions.style();
-      if (config.types) cjsInputOptions.typescript({ jsx: 'preserve' });
+      if (config.types)
+        cjsInputOptions.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } });
 
       const cjsOutputOptions = new RollupOutputOptions()
         .format(map => map.cjs)
@@ -115,16 +134,17 @@ function start() {
         });
     }
 
-    if (config.module) {
+    if (config.module || config.type === 'module') {
       const esInputOptions = new RollupInputOptions()
-        .input(['src/index.ts'])
+        .input([input])
         .external(external)
         .image()
         .resolve()
         .babel()
         .commonjs();
       if (style) esInputOptions.style();
-      if (config.typings) esInputOptions.typescript({ jsx: 'preserve' });
+      if (config.types)
+        esInputOptions.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } });
 
       const esOutputOptions = new RollupOutputOptions()
         .format(map => map.es)
