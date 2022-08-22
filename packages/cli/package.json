@@ -2,7 +2,11 @@
   "name": "@lough/build-cli",
   "version": "0.0.0",
   "description": "This is a Build tool docked in lough.",
-  "author": "City <city@nanzc.com>",
+  "author": {
+    "name": "Lough",
+    "email": "lough@nanzc.com",
+    "home": "nanzc.com"
+  },
   "license": "MIT",
   "bin": {
     "lough-build": "./bin/index.js"

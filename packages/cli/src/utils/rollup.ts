@@ -27,8 +27,8 @@ const originBuild = async (options: IOptions) => {
 export default class LoughRollup {
   private options: IOptions;
 
-  constructor(options: IOptions) {
-    this.options = options;
+  constructor(options: Omit<IOptions, 'output'>) {
+    this.options = { ...options, output: [] };
   }
 
   // addInputPlugin(plugin: Plugin) {
@@ -52,6 +52,6 @@ export default class LoughRollup {
   }
 
   build() {
-    originBuild(this.options);
+    return originBuild(this.options);
   }
 }

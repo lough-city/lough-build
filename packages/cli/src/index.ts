@@ -1,12 +1,23 @@
 #!/usr/bin/env node
 import { program } from 'commander';
 import { parse, join } from 'path';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import init from './commands/init';
 import NpmOperate from '@lough/npm-operate';
 import { RollupInputOptions, RollupOutputOptions } from './utils/rollupConfig';
 import { bundleRequire } from 'bundle-require';
 import { LoughBuildConfig } from './typings/config';
+import LoughRollup from './utils/rollup';
+
+const getLoughBuildConfig = async (path: string) => {
+  const {
+    mod: { default: loughBuildConfig }
+  } = await bundleRequire({
+    filepath: join(process.cwd(), 'lough.build.config.ts')
+  });
+
+  return loughBuildConfig as LoughBuildConfig;
+};
 
 function start() {
   const jsonPath = join(__dirname, '../package.json');
@@ -18,39 +29,11 @@ function start() {
 
   program.action(async (...args) => {
     const npm = new NpmOperate();
-
     const config = npm.readConfig();
-    const {
-      mod: { default: loughBuildConfig }
-    } = await bundleRequire({
-      filepath: join(process.cwd(), 'lough.build.config.ts')
-    });
+    const rootPath = join(process.cwd(), 'lough.build.config.ts');
 
-    const buildConfig = loughBuildConfig as LoughBuildConfig;
+    const buildConfig = existsSync(rootPath) ? await getLoughBuildConfig(rootPath) : undefined;
 
-    // init
-
-    // react components
-    // lib
-    // node
-    // js
-
-    // custom
-    // cjs
-    //  style
-    //  declaration
-    // es
-    //  style
-    //  declaration
-    // umd
-
-    // const map = {
-    //   main: 'cjs',
-    //   module: 'es',
-    //   unpkg: 'umd',
-    //   types: 'dts'
-    //   style: 'css'
-    // };
     const banner = `/*!
 *
 * ${config.name} ${config.version}
@@ -66,7 +49,7 @@ function start() {
       .replace(/-(\w)/g, (_$0, $1) => $1.toUpperCase())
       .replace(/([\w])/, (_$0, $1) => $1.toUpperCase());
 
-    const { input, style, globals, external } = buildConfig;
+    const { input = 'src/index.ts', style = false, globals = {}, external = [] } = buildConfig || {};
 
     if (config.unpkg) {
       const umdInputOptions = new RollupInputOptions()
@@ -83,8 +66,10 @@ function start() {
         .name(title)
         .globals(globals)
         .assetFileNames()
-        .file(config.unpkg.replace('.min', ''))
+        .file('dist/index.js')
         .banner(banner);
+
+      await new LoughRollup(umdInputOptions.options).addOutputOption(umdOutputOptions.options).build();
 
       const unpkgInputOptions = new RollupInputOptions()
         .input(input)
@@ -100,15 +85,12 @@ function start() {
         .name(title)
         .globals(globals)
         .assetFileNames()
-        .file(config.unpkg)
+        .file('dist/index.min.js')
         .banner(banner)
         .terser();
-    }
 
-    // type: commonjs | module | undefined
-    // if(module) es
-    // else if(commonjs) lib if(config.module) es
-    // else lib if(config.module) es
+      await new LoughRollup(unpkgInputOptions.options).addOutputOption(unpkgOutputOptions.options).build();
+    }
 
     if (config.main && config.type !== 'module') {
       const cjsInputOptions = new RollupInputOptions()
@@ -119,8 +101,7 @@ function start() {
         .babel()
         .commonjs();
       if (style) cjsInputOptions.style();
-      if (config.types)
-        cjsInputOptions.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } });
+      if (config.types) cjsInputOptions.typescript({ jsx: 'preserve', check: false });
 
       const cjsOutputOptions = new RollupOutputOptions()
         .format(map => map.cjs)
@@ -132,6 +113,8 @@ function start() {
           if (ext !== '.css') return '[name].[ext]';
           return join(dir, base);
         });
+
+      await new LoughRollup(cjsInputOptions.options).addOutputOption(cjsOutputOptions.options).build();
     }
 
     if (config.module || config.type === 'module') {
@@ -143,8 +126,7 @@ function start() {
         .babel()
         .commonjs();
       if (style) esInputOptions.style();
-      if (config.types)
-        esInputOptions.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } });
+      if (config.types) esInputOptions.typescript({ jsx: 'preserve', check: false });
 
       const esOutputOptions = new RollupOutputOptions()
         .format(map => map.es)
@@ -156,6 +138,7 @@ function start() {
           if (ext !== '.css') return '[name].[ext]';
           return join(dir, base);
         });
+      await new LoughRollup(esInputOptions.options).addOutputOption(esOutputOptions.options).build();
     }
   });
 
@@ -163,3 +146,5 @@ function start() {
 }
 
 start();
+
+export const defineConfig = (config: LoughBuildConfig) => config;
