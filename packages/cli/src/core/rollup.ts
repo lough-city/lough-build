@@ -1,4 +1,6 @@
 import { OutputOptions, /* Plugin,  */ rollup, RollupOptions } from 'rollup';
+import { RollupInputOptions } from './inputOptions';
+import { RollupOutputOptions } from './outputOptions';
 
 type IOptions = RollupOptions & { output: Array<OutputOptions> };
 
@@ -8,9 +10,8 @@ const originBuild = async (options: IOptions) => {
 
   try {
     bundle = await rollup({ ...options, output: undefined });
-
     for (const outputOptions of options.output) {
-      await bundle.write(outputOptions);
+      const result = await bundle.write(outputOptions);
     }
   } catch (error) {
     buildFailed = true;
@@ -21,27 +22,16 @@ const originBuild = async (options: IOptions) => {
     // closes the bundle
     await bundle.close();
   }
-  // process.exit(buildFailed ? 1 : 0);
+
+  return buildFailed;
 };
 
-export default class LoughRollup {
-  private options: IOptions;
+export class LoughRollup {
+  inputOption = new RollupInputOptions();
 
-  constructor(options: Omit<IOptions, 'output'>) {
-    this.options = { ...options, output: [] };
-  }
-
-  addOutputOption(outputOptions: OutputOptions) {
-    if (!this.options.output) {
-      this.options.output = [outputOptions];
-      return this;
-    }
-
-    this.options.output.push(outputOptions);
-    return this;
-  }
+  outputOption = new RollupOutputOptions();
 
   build() {
-    return originBuild(this.options);
+    return originBuild({ ...this.inputOption.options, output: [this.outputOption.options] });
   }
 }
