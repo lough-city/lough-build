@@ -3,4 +3,5 @@ export interface LoughBuildConfig {
   external: Array<string>;
   globals: Record<string, string>;
   style: boolean;
+  componentDir: string;
 }

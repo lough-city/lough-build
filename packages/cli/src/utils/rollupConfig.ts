@@ -45,7 +45,7 @@ export class RollupInputOptions {
   }
 
   typescript(params: RPT2Options & Record<string, any>) {
-    typescript(params);
+    this.addPlugin(typescript(params));
     return this;
   }
 

@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import { parse, join } from 'path';
-import { readFileSync, existsSync } from 'fs';
+import { parse, join, resolve } from 'path';
+import { readFileSync, existsSync, readdirSync } from 'fs';
 import init from './commands/init';
 import NpmOperate from '@lough/npm-operate';
 import { RollupInputOptions, RollupOutputOptions } from './utils/rollupConfig';
 import { bundleRequire } from 'bundle-require';
 import { LoughBuildConfig } from './typings/config';
 import LoughRollup from './utils/rollup';
+import { startSpinner, succeedSpinner } from './utils/spinner';
 
 const getLoughBuildConfig = async (path: string) => {
   const {
@@ -17,6 +18,19 @@ const getLoughBuildConfig = async (path: string) => {
   });
 
   return loughBuildConfig as LoughBuildConfig;
+};
+
+const getComponentStyle = (componentDir: string) => {
+  const cModuleNames = readdirSync(resolve(componentDir));
+  const styleEntryFiles = cModuleNames
+    .map(name =>
+      /^[A-Z]\w*/.test(name) && existsSync(`${componentDir}/${name}/style/index.tsx`)
+        ? `${componentDir}/${name}/style/index.tsx`
+        : undefined
+    )
+    .filter(Boolean);
+
+  return styleEntryFiles as Array<string>;
 };
 
 function start() {
@@ -49,11 +63,23 @@ function start() {
       .replace(/-(\w)/g, (_$0, $1) => $1.toUpperCase())
       .replace(/([\w])/, (_$0, $1) => $1.toUpperCase());
 
-    const { input = 'src/index.ts', style = false, globals = {}, external = [] } = buildConfig || {};
+    const {
+      input = 'src/index.ts',
+      style = false,
+      globals = {},
+      external = [],
+      componentDir = 'src/components'
+    } = buildConfig || {};
+
+    const styleDirList = existsSync(join(process.cwd(), componentDir))
+      ? getComponentStyle(join(process.cwd(), componentDir))
+      : [];
 
     if (config.unpkg) {
+      startSpinner('umd: 开始打包');
+
       const umdInputOptions = new RollupInputOptions()
-        .input(input)
+        .input(existsSync(join(process.cwd(), 'src/index.umd.ts')) ? 'src/index.umd.ts' : input)
         .external(external)
         .image()
         .resolve()
@@ -70,9 +96,11 @@ function start() {
         .banner(banner);
 
       await new LoughRollup(umdInputOptions.options).addOutputOption(umdOutputOptions.options).build();
+      succeedSpinner('umd: 打包成功');
 
+      startSpinner('unpkg: 开始打包');
       const unpkgInputOptions = new RollupInputOptions()
-        .input(input)
+        .input(existsSync(join(process.cwd(), 'src/index.umd.ts')) ? 'src/index.umd.ts' : input)
         .external(external)
         .image()
         .resolve()
@@ -90,18 +118,21 @@ function start() {
         .terser();
 
       await new LoughRollup(unpkgInputOptions.options).addOutputOption(unpkgOutputOptions.options).build();
+      succeedSpinner('unpkg: 打包成功');
     }
 
     if (config.main && config.type !== 'module') {
+      startSpinner('cjs: 开始打包');
       const cjsInputOptions = new RollupInputOptions()
-        .input([input])
+        .input([input, ...styleDirList])
         .external(external)
         .image()
         .resolve()
         .babel()
         .commonjs();
       if (style) cjsInputOptions.style();
-      if (config.types) cjsInputOptions.typescript({ jsx: 'preserve', check: false });
+      if (config.types)
+        cjsInputOptions.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } });
 
       const cjsOutputOptions = new RollupOutputOptions()
         .format(map => map.cjs)
@@ -115,18 +146,22 @@ function start() {
         });
 
       await new LoughRollup(cjsInputOptions.options).addOutputOption(cjsOutputOptions.options).build();
+      succeedSpinner('cjs: 打包成功');
     }
 
     if (config.module || config.type === 'module') {
+      startSpinner('es: 开始打包');
       const esInputOptions = new RollupInputOptions()
-        .input([input])
+        .input([input, ...styleDirList])
         .external(external)
         .image()
         .resolve()
         .babel()
         .commonjs();
       if (style) esInputOptions.style();
-      if (config.types) esInputOptions.typescript({ jsx: 'preserve', check: false });
+
+      if (config.types)
+        esInputOptions.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } });
 
       const esOutputOptions = new RollupOutputOptions()
         .format(map => map.es)
@@ -139,6 +174,7 @@ function start() {
           return join(dir, base);
         });
       await new LoughRollup(esInputOptions.options).addOutputOption(esOutputOptions.options).build();
+      succeedSpinner('es: 打包成功');
     }
   });
 
@@ -147,4 +183,4 @@ function start() {
 
 start();
 
-export const defineConfig = (config: LoughBuildConfig) => config;
+export const defineConfig = (config: Partial<LoughBuildConfig>) => config;

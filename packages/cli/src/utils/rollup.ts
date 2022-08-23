@@ -21,7 +21,7 @@ const originBuild = async (options: IOptions) => {
     // closes the bundle
     await bundle.close();
   }
-  process.exit(buildFailed ? 1 : 0);
+  // process.exit(buildFailed ? 1 : 0);
 };
 
 export default class LoughRollup {
@@ -30,16 +30,6 @@ export default class LoughRollup {
   constructor(options: Omit<IOptions, 'output'>) {
     this.options = { ...options, output: [] };
   }
-
-  // addInputPlugin(plugin: Plugin) {
-  //   if (!this.options.plugins) {
-  //     this.options.plugins = [plugin];
-  //     return this;
-  //   }
-
-  //   this.options.plugins.push(plugin);
-  //   return this;
-  // }
 
   addOutputOption(outputOptions: OutputOptions) {
     if (!this.options.output) {
