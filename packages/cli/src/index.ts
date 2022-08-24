@@ -1,36 +1,13 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import { join, resolve } from 'path';
-import { readFileSync, existsSync, readdirSync } from 'fs';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 import init from './commands/init';
 import NpmOperate from '@lough/npm-operate';
-import { bundleRequire } from 'bundle-require';
-import { GenerateConfig, LoughBuildConfig } from './typings/config';
-import { LoughRollup, generateUmd, generateUnpkg, generateCommonJS, generateESModule } from './core';
+import { LoughBuildConfig } from './typings/config';
+import { generateUmd, generateUnpkg, generateCommonJS, generateESModule } from './core';
 import { failLoadingSpinner, startLoadingSpinner, succeedLoadingSpinner } from './utils/spinner';
-
-const getLoughBuildConfig = async (path: string) => {
-  const {
-    mod: { default: loughBuildConfig }
-  } = await bundleRequire({
-    filepath: join(process.cwd(), 'lough.build.config.ts')
-  });
-
-  return loughBuildConfig as LoughBuildConfig;
-};
-
-const getComponentStyle = (componentDir: string) => {
-  const cModuleNames = readdirSync(resolve(componentDir));
-  const styleEntryFiles = cModuleNames
-    .map(name =>
-      /^[A-Z]\w*/.test(name) && existsSync(`${componentDir}/${name}/style/index.tsx`)
-        ? `${componentDir}/${name}/style/index.tsx`
-        : undefined
-    )
-    .filter(Boolean);
-
-  return styleEntryFiles as Array<string>;
-};
+import { getGenerateConfig } from './utils/config';
 
 function start() {
   const jsonPath = join(__dirname, '../package.json');
@@ -40,44 +17,11 @@ function start() {
 
   program.command(init.command).description(init.description).action(init.action);
 
-  program.action(async (...args) => {
-    const config = new NpmOperate().readConfig();
-    const rootPath = join(process.cwd(), 'lough.build.config.ts');
+  program.action(async () => {
+    const rootPath = process.cwd();
+    const config = new NpmOperate({ rootPath }).readConfig();
 
-    const buildConfig = existsSync(rootPath) ? await getLoughBuildConfig(rootPath) : undefined;
-
-    const banner = `/*!
-*
-* ${config.name} ${config.version}
-*
-* Copyright 2021-present, ${config.author}.
-* All rights reserved.
-*
-*/`;
-
-    const title = config.name
-      .replace('@', '')
-      .replace('/', '-')
-      .replace(/-(\w)/g, (_$0, $1) => $1.toUpperCase())
-      .replace(/([\w])/, (_$0, $1) => $1.toUpperCase());
-
-    const componentDir = buildConfig?.componentDir ?? 'src/components';
-
-    const styleDirList = existsSync(join(process.cwd(), componentDir))
-      ? getComponentStyle(join(process.cwd(), componentDir))
-      : [];
-
-    const generateConfig: Readonly<GenerateConfig> = {
-      input: buildConfig?.input ?? 'src/index.ts',
-      style: buildConfig?.style ?? false,
-      globals: buildConfig?.globals ?? {},
-      external: buildConfig?.external ?? [],
-      componentDir,
-      styleDirList,
-      config,
-      title,
-      banner
-    };
+    const generateConfig = await getGenerateConfig(rootPath, config);
 
     if (config.unpkg) {
       startLoadingSpinner('umd: 开始打包');

@@ -13,4 +13,5 @@ export interface GenerateConfig extends LoughBuildConfig {
   config: Package;
   title: string;
   banner: string;
+  rootPath: string;
 }

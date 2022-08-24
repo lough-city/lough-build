@@ -3,11 +3,11 @@ import { join } from 'path';
 import { LoughRollup } from './rollup';
 import { GenerateConfig } from '../typings/config';
 
-export const generateUnpkg = ({ input, globals, external, style, title, banner, config }: GenerateConfig) => {
+export const generateUnpkg = ({ input, globals, external, style, title, banner, config, rootPath }: GenerateConfig) => {
   const flow = new LoughRollup();
 
   flow.inputOption
-    .input(existsSync(join(process.cwd(), input.replace('.ts', '.umd.ts'))) ? input.replace('.ts', '.umd.ts') : input)
+    .input(existsSync(join(rootPath, input.replace('.ts', '.umd.ts'))) ? input.replace('.ts', '.umd.ts') : input)
     .external(external)
     .switch(style, self => self.style({ minimize: true }))
     .image()
