@@ -34,7 +34,7 @@ export class RollupOutputOptions {
     return this;
   }
 
-  exports(exports: typeof this.options.exports = 'named') {
+  exports(exports: OutputOptions['exports'] = 'named') {
     this.options.exports = exports;
     return this;
   }
@@ -49,7 +49,7 @@ export class RollupOutputOptions {
     return this;
   }
 
-  assetFileNames(assetFileNames: typeof this.options.assetFileNames = '[name].[ext]') {
+  assetFileNames(assetFileNames: OutputOptions['assetFileNames'] = '[name].[ext]') {
     this.options.assetFileNames = assetFileNames;
     return this;
   }

@@ -1,6 +1,8 @@
 {
   "name": "@lough/build-cli",
   "version": "0.0.0",
+  "main": "./bin/index.js",
+  "types": "./bin/index.d.ts",
   "description": "This is a Build tool docked in lough.",
   "author": {
     "name": "Lough",
@@ -27,10 +29,12 @@
     "url": "https://github.com/AnCIity/lough-build/issues"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf ./bin && tsc && node ./scripts/build.js",
     "test": "npm run build && npm link && lough-build"
   },
   "devDependencies": {
+    "@types/inquirer": "8.2.1",
+    "rimraf": "^3.0.2",
     "typescript": "^4.7.4"
   },
   "dependencies": {
@@ -42,9 +46,11 @@
     "@rollup/plugin-node-resolve": "^13.3.0",
     "autoprefixer": "^10.4.7",
     "bundle-require": "^3.0.4",
+    "chalk": "4.1.2",
     "commander": "^9.3.0",
     "esbuild": "^0.15.5",
     "execa": "5.1.1",
+    "inquirer": "8.2.4",
     "ora": "5.4.1",
     "rollup": "^2.77.0",
     "rollup-plugin-styles": "^4.0.0",

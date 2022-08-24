@@ -17,7 +17,7 @@ export class RollupInputOptions {
     this.options.plugins.push(plugin);
   }
 
-  switch(use: boolean, callback: (self: typeof this) => void) {
+  switch(use: boolean, callback: (self: RollupInputOptions) => void) {
     if (use) callback(this);
     return this;
   }

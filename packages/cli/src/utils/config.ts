@@ -3,6 +3,7 @@ import { bundleRequire } from 'bundle-require';
 import { GenerateConfig, LoughBuildConfig } from '../typings/config';
 import { join, resolve } from 'path';
 import { existsSync, readdirSync } from 'fs';
+import { CONFIG_FILE_NAME } from '../constants/config';
 
 export const getBanner = (config: Package) => {
   return `/*!
@@ -24,7 +25,7 @@ export const getTitle = (name: string) => {
 };
 
 export const getLoughBuildConfig = async (rootPath: string) => {
-  const loughConfigPath = join(rootPath, 'lough.build.config.ts');
+  const loughConfigPath = join(rootPath, CONFIG_FILE_NAME);
   if (!existsSync(loughConfigPath)) return undefined;
 
   const {

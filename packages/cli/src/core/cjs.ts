@@ -1,8 +1,17 @@
 import { parse, join } from 'path';
 import { LoughRollup } from './rollup';
 import { GenerateConfig } from '../typings/config';
+import { removeDirOrFileSync } from '../utils/file';
 
-export const generateCommonJS = ({ input, globals, external, style, styleDirList, config }: GenerateConfig) => {
+export const generateCommonJS = ({
+  input,
+  globals,
+  external,
+  style,
+  styleDirList,
+  config,
+  rootPath
+}: GenerateConfig) => {
   const flow = new LoughRollup();
 
   flow.inputOption
@@ -28,6 +37,8 @@ export const generateCommonJS = ({ input, globals, external, style, styleDirList
       if (ext !== '.css') return '[name].[ext]';
       return join(dir, base);
     });
+
+  removeDirOrFileSync(join(rootPath, 'lib'));
 
   return flow.build();
 };
