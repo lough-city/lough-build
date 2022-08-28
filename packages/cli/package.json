@@ -39,6 +39,8 @@
   },
   "dependencies": {
     "@babel/core": "^7.18.9",
+    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
     "@lough/npm-operate": "0.1.0-beta.8",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.1",
