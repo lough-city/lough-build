@@ -26,9 +26,9 @@ export const textLoadingSpinner = (text: string) => {
 };
 
 export const succeedLoadingSpinner = (text: string) => {
-  spinner.succeed(`${text}...\n`);
+  spinner.succeed(`${text}\n`);
 };
 
 export const failLoadingSpinner = (text: string) => {
-  spinner.fail(`${text}...\n`);
+  spinner.fail(`${text}\n`);
 };

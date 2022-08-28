@@ -16,15 +16,15 @@ export const generateCommonJS = ({
 
   flow.inputOption
     .input([input, ...styleDirList])
+    .switch(!!config.types, self =>
+      self.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } })
+    )
     .external(external)
     .switch(style, self => self.style({ split: true }))
     .image()
     .resolve()
     .babel()
-    .commonjs()
-    .switch(!!config.types, self =>
-      self.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } })
-    );
+    .commonjs();
 
   flow.outputOption
     .format(map => map.cjs)
