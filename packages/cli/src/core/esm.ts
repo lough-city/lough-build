@@ -37,7 +37,7 @@ export const generateESModule = ({
       return join(dir, base);
     });
 
-  removeDirOrFileSync(join(rootPath, 'lib'));
+  removeDirOrFileSync(join(rootPath, 'es'));
 
   return flow.build();
 };
