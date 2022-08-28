@@ -26,7 +26,7 @@ export const generateUmd = ({ input, globals, external, style, title, banner, co
     .file(file)
     .banner(banner);
 
-  removeDirOrFileSync(join(rootPath, file));
+  // removeDirOrFileSync(join(rootPath, file));
 
   return flow.build();
 };

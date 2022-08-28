@@ -27,7 +27,7 @@ export const generateUnpkg = ({ input, globals, external, style, title, banner, 
     .banner(banner)
     .terser();
 
-  removeDirOrFileSync(join(rootPath, file));
+  // removeDirOrFileSync(join(rootPath, file));
 
   return flow.build();
 };
