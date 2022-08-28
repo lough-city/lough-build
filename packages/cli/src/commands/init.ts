@@ -37,9 +37,9 @@ const action = async () => {
   const parent = new NpmOperate({ rootPath });
   let npm = parent;
 
-  if (npm.isLernaProject) {
-    const key = await getSub(Object.keys(npm.packages));
-    const subPackage = npm.packages[key];
+  if (parent.isLernaProject) {
+    const key = await getSub(Object.keys(parent.packages));
+    const subPackage = parent.packages[key];
 
     npm = new NpmOperate({ rootPath: subPackage.absolutePath });
   }
@@ -47,8 +47,8 @@ const action = async () => {
   const projectType = await getProjectType();
 
   startLoadingSpinner(`开始安装 ${packageName}`);
-  parent.isLernaProject ? parent.uninstallLerna(packageName) : npm.uninstall(packageName);
-  parent.isLernaProject ? parent.installDevLerna(packageName) : npm.installDev(packageName);
+  parent.isLernaProject ? parent.uninstallLerna(packageName, npm.readConfig().name) : npm.uninstall(packageName);
+  parent.isLernaProject ? parent.installDevLerna(packageName, npm.readConfig().name) : npm.installDev(packageName);
   succeedLoadingSpinner('安装成功');
 
   /* 配置写入 */
@@ -66,7 +66,13 @@ const action = async () => {
   if (projectType === PROJECT_TYPE.componentLib) {
     /* 打包配置写入 */
     startLoadingSpinner(`开始写入 ${CONFIG_FILE_NAME}`);
-    copyFileSync(join(__dirname, `../templates/${CONFIG_FILE_NAME}`), `${process.cwd()}/${CONFIG_FILE_NAME}`);
+    copyFileSync(
+      join(__dirname, `../templates/${CONFIG_FILE_NAME}`),
+      join(
+        parent.isLernaProject ? parent.packages[npm.readConfig().name].absolutePath : process.cwd(),
+        CONFIG_FILE_NAME
+      )
+    );
     succeedLoadingSpinner(`写入 ${CONFIG_FILE_NAME} 成功`);
   }
 
