@@ -38,7 +38,7 @@ export const generateCommonJS = ({
       return join(dir, base);
     });
 
-  removeDirOrFileSync(join(rootPath, 'lib'));
+  // removeDirOrFileSync(join(rootPath, 'lib'));
 
   return flow.build();
 };
