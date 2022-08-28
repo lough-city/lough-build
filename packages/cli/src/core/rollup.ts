@@ -23,7 +23,7 @@ const originBuild = async (options: IOptions) => {
     await bundle.close();
   }
 
-  return buildFailed;
+  return !buildFailed;
 };
 
 export class LoughRollup {
