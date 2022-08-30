@@ -81,6 +81,6 @@ const action = async () => {
 
 export default {
   command: 'init',
-  description: '初始化 build 工具',
+  description: 'init project build function.',
   action
 };

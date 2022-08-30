@@ -38,6 +38,6 @@ const action = async () => {
 
 export default {
   command: 'build',
-  description: '打包构建',
+  description: 'Build.',
   action
 };
