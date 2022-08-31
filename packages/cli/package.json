@@ -1,6 +1,6 @@
 {
   "name": "@lough/build-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "./bin/index.js",
   "types": "./bin/index.d.ts",
   "description": "This is a Build tool docked in lough.",
