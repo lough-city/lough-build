@@ -14,6 +14,7 @@ export const generateUnpkg = ({ input, globals, external, style, title, banner, 
     .external(external)
     .switch(style, self => self.style({ minimize: true }))
     .image()
+    .json()
     .resolve()
     .babel()
     .commonjs();

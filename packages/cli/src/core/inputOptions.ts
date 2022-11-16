@@ -5,6 +5,7 @@ import image from '@rollup/plugin-image';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import typescript, { RPT2Options } from 'rollup-plugin-typescript2';
 import { writeFileSync, existsSync } from 'fs';
 import { join, resolve as pathResolve } from 'path';
@@ -29,6 +30,11 @@ export class RollupInputOptions {
 
   external(external: ExternalOption) {
     this.options.external = external;
+    return this;
+  }
+
+  json() {
+    this.addPlugin(json());
     return this;
   }
 

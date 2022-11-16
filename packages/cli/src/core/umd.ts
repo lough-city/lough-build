@@ -14,6 +14,7 @@ export const generateUmd = ({ input, globals, external, style, title, banner, co
     .external(external)
     .switch(style, self => self.style())
     .image()
+    .json()
     .resolve()
     .babel()
     .commonjs();

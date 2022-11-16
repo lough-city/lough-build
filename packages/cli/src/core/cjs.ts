@@ -22,6 +22,7 @@ export const generateCommonJS = ({
     .external(external)
     .switch(style, self => self.style({ split: true }))
     .image()
+    .json()
     .resolve()
     .babel()
     .commonjs();
