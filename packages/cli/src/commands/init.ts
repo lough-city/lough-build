@@ -56,6 +56,7 @@ const action = async () => {
   const config = npm.readConfig();
   if (!config.scripts) config.scripts = {};
   config.scripts.build = 'lough-build';
+  config.scripts.dev = 'lough-build dev';
   config.type = 'module';
   config.main = 'es/index.js';
   config.unpkg = 'dist/index.min.js';
