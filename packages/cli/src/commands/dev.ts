@@ -1,15 +1,14 @@
 import chokidar from 'chokidar';
 import build from './build';
 import { startSpinner } from '../utils/spinner';
+import createDebounceInterval from '../utils/debounceInterval';
+
+const buildDebounce = createDebounceInterval(build.action, { interval: 500 });
 
 const action = async () => {
   const rootPath = process.cwd();
 
   startSpinner('dev watch: ' + rootPath);
-
-  const lyricalJs = await import('@lyrical/js');
-
-  const buildDebounce = lyricalJs.createDebounceInterval(build.action, { interval: 500 });
 
   buildDebounce();
 
