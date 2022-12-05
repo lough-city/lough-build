@@ -13,7 +13,7 @@ const action = async () => {
 
   startSpinner('dev watch: ' + rootPath);
 
-  chokidar.watch(join(rootPath, 'src')).on('change', buildDebounce);
+  chokidar.watch(rootPath).on('change', buildDebounce);
 };
 
 export default {
