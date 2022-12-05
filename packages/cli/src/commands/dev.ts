@@ -1,13 +1,18 @@
-import { startSpinner } from '../utils/spinner';
-import fs from 'fs';
+import chokidar from 'chokidar';
+import { createDebounceInterval } from '@lyrical/js';
 import build from './build';
+import { startSpinner } from '../utils/spinner';
+
+const buildDebounce = createDebounceInterval(build.action, { interval: 500 });
 
 const action = async () => {
   const rootPath = process.cwd();
 
   startSpinner('dev watch: ' + rootPath);
 
-  fs.watch(rootPath, build.action);
+  buildDebounce();
+
+  chokidar.watch(rootPath).on('change', buildDebounce);
 };
 
 export default {
