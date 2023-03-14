@@ -5,7 +5,7 @@ import { PROJECT_TYPE, PROJECT_TYPE_LABEL } from '../constants';
 import { CONFIG_FILE_NAME } from '../constants/config';
 import { join } from 'path';
 import { copyFileSync } from '../utils/file';
-import { startLoadingSpinner, succeedLoadingSpinner, succeedSpinner, textLoadingSpinner } from '../utils/spinner';
+import { startLoadingSpinner, succeedLoadingSpinner, succeedSpinner } from '../utils/spinner';
 
 const PACKAGE = '@lough/build-cli';
 
