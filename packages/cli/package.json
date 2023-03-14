@@ -1,6 +1,6 @@
 {
   "name": "@lough/build-cli",
-  "version": "0.1.0",
+  "version": "0.0.13",
   "main": "./bin/index.js",
   "types": "./bin/index.d.ts",
   "description": "This is a Build tool docked in lough.",
@@ -60,7 +60,7 @@
     "rollup": "^2.77.0",
     "rollup-plugin-styles": "^4.0.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.32.1"
+    "rollup-plugin-typescript2": "^0.34.1"
   },
   "gitHead": "6658cc31bc2a5f5d815087a18193d4b5781a311d"
 }
