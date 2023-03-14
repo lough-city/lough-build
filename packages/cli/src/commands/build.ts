@@ -1,11 +1,11 @@
-import NpmOperate from '@lough/npm-operate';
+import { Package } from '@lough/npm-operate';
 import { generateUmd, generateUnpkg, generateCommonJS, generateESModule } from '../core';
 import { failLoadingSpinner, startLoadingSpinner, succeedLoadingSpinner } from '../utils/spinner';
 import { getGenerateConfig } from '../utils/config';
 
 const action = async () => {
   const rootPath = process.cwd();
-  const config = new NpmOperate({ rootPath }).readConfig();
+  const config = new Package().readConfig();
 
   const generateConfig = await getGenerateConfig(rootPath, config);
 

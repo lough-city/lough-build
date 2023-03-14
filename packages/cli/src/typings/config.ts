@@ -1,4 +1,4 @@
-import { Package } from '@lough/npm-operate';
+import { IPackage } from '@lough/npm-operate';
 
 export interface LoughBuildConfig {
   input: string;
@@ -10,7 +10,7 @@ export interface LoughBuildConfig {
 
 export interface GenerateConfig extends LoughBuildConfig {
   styleDirList: Array<string>;
-  config: Package;
+  config: IPackage;
   title: string;
   banner: string;
   rootPath: string;

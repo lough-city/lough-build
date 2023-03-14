@@ -1,18 +1,20 @@
 import { prompt } from 'inquirer';
 import chalk from 'chalk';
-import NpmOperate from '@lough/npm-operate';
+import { Package } from '@lough/npm-operate';
 import { PROJECT_TYPE, PROJECT_TYPE_LABEL } from '../constants';
 import { CONFIG_FILE_NAME } from '../constants/config';
 import { join } from 'path';
 import { copyFileSync } from '../utils/file';
 import { startLoadingSpinner, succeedLoadingSpinner, succeedSpinner, textLoadingSpinner } from '../utils/spinner';
 
+const PACKAGE = '@lough/build-cli';
+
 const getSub = (keyList: Array<string>) =>
   prompt<{ key: string }>([
     {
       type: 'list',
       name: 'key',
-      message: `检测到项目为多包项目，请选择一个子包以继续进行:`,
+      message: `Please select need initialized sub package:`,
       choices: keyList
     }
   ]).then(res => res.key);
@@ -22,7 +24,7 @@ const getProjectType = () =>
     {
       type: 'list',
       name: 'type',
-      message: `请选择项目类型:`,
+      message: `Please select project type:`,
       choices: Object.keys(PROJECT_TYPE).map(key => ({
         name: `${key} ${PROJECT_TYPE_LABEL[key as keyof typeof PROJECT_TYPE]}`,
         value: PROJECT_TYPE[key as keyof typeof PROJECT_TYPE]
@@ -30,25 +32,21 @@ const getProjectType = () =>
     }
   ]).then(res => res.type);
 
-const packageName = '@lough/build-cli';
-
 const action = async () => {
-  const rootPath = process.cwd();
-  const parent = new NpmOperate({ rootPath });
-  let npm = parent;
+  let npm = new Package();
 
-  if (parent.isLernaProject) {
-    const key = await getSub(Object.keys(parent.packages));
-    const subPackage = parent.packages[key];
+  if (npm.options.isWorkspaces) {
+    const key = await getSub([npm.name, ...npm.children.map(item => item.name)]);
+    const item = npm.children.find(item => item.name === key);
 
-    npm = new NpmOperate({ rootPath: subPackage.absolutePath });
+    if (item) npm = item;
   }
 
   const projectType = await getProjectType();
 
-  startLoadingSpinner(`开始安装 ${packageName}`);
-  parent.isLernaProject ? parent.uninstallLerna(packageName, npm.readConfig().name) : npm.uninstall(packageName);
-  parent.isLernaProject ? parent.installDevLerna(packageName, npm.readConfig().name) : npm.installDev(packageName);
+  startLoadingSpinner(`开始安装 ${PACKAGE}`);
+  npm.uninstall(PACKAGE);
+  npm.installDev(PACKAGE);
   succeedLoadingSpinner('安装成功');
 
   /* 配置写入 */
@@ -67,13 +65,7 @@ const action = async () => {
   if (projectType === PROJECT_TYPE.componentLib) {
     /* 打包配置写入 */
     startLoadingSpinner(`开始写入 ${CONFIG_FILE_NAME}`);
-    copyFileSync(
-      join(__dirname, `../templates/${CONFIG_FILE_NAME}`),
-      join(
-        parent.isLernaProject ? parent.packages[npm.readConfig().name].absolutePath : process.cwd(),
-        CONFIG_FILE_NAME
-      )
-    );
+    copyFileSync(join(__dirname, `../templates/${CONFIG_FILE_NAME}`), join(npm.options.dirName, CONFIG_FILE_NAME));
     succeedLoadingSpinner(`写入 ${CONFIG_FILE_NAME} 成功`);
   }
 

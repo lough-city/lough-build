@@ -1,11 +1,11 @@
-import { Package } from '@lough/npm-operate';
+import { IPackage } from '@lough/npm-operate';
 import { bundleRequire } from 'bundle-require';
 import { GenerateConfig, LoughBuildConfig } from '../typings/config';
 import { join, resolve } from 'path';
 import { existsSync, readdirSync } from 'fs';
 import { CONFIG_FILE_NAME } from '../constants/config';
 
-export const getBanner = (config: Package) => {
+export const getBanner = (config: IPackage) => {
   return `/*!
   *
   * ${config.name} ${config.version}
@@ -50,7 +50,7 @@ const getComponentStyle = (componentDir: string) => {
   return styleEntryFiles as Array<string>;
 };
 
-export const getGenerateConfig = async (rootPath: string, config: Package) => {
+export const getGenerateConfig = async (rootPath: string, config: IPackage) => {
   const buildConfig = await getLoughBuildConfig(rootPath);
   const componentDir = buildConfig?.componentDir ?? 'src/components';
   const styleDirList = existsSync(join(rootPath, componentDir)) ? getComponentStyle(join(rootPath, componentDir)) : [];
