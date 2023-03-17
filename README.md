@@ -10,6 +10,7 @@
 2. `lough-build`：支持以下类型项目打包构建：
    - `classLib`：类库项目
    - `componentLib`：组件库项目
+   - `cli`：脚手架项目
 
 ## Install
 
@@ -39,6 +40,8 @@ Options:
 
 Commands:
   init           init project build function.
+  external       Scan dependencies are added as external modules.
+  dev            Dev.
 ```
 
 `lough-build` 命令将会用于打包构建。

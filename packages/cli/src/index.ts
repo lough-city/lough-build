@@ -5,6 +5,7 @@ import { readFileSync } from 'fs';
 import init from './commands/init';
 import build from './commands/build';
 import dev from './commands/dev';
+import external from './commands/external';
 import { LoughBuildConfig } from './typings/config';
 
 function start() {
@@ -14,6 +15,7 @@ function start() {
   program.version(jsonResult.version);
 
   program.command(init.command).description(init.description).action(init.action);
+  program.command(external.command).description(external.description).action(external.action);
 
   program.description(build.description).action(build.action);
 
