@@ -21,11 +21,11 @@ export const removeDirOrFileSync = (removePath: string) => {
 export const copyFileSync = (fromPath: string, toPath: string, transform?: (v: string) => string) => {
   if (!fs.existsSync(fromPath)) return false;
 
-  if (fs.existsSync(fromPath)) removeDirOrFileSync(toPath);
-
   let writeContent = fs.readFileSync(fromPath, { encoding: 'utf8' });
 
   if (transform) writeContent = transform(writeContent);
+
+  if (fs.existsSync(fromPath)) removeDirOrFileSync(toPath);
 
   fs.writeFileSync(toPath, writeContent, 'utf8');
 

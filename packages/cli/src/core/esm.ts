@@ -16,6 +16,7 @@ export const generateESModule = ({
 
   flow.inputOption
     .input([input, ...styleDirList])
+    .shebang()
     .switch(!!config.types, self =>
       self.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } })
     )

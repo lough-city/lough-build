@@ -6,10 +6,15 @@ export enum PROJECT_TYPE {
   /**
    * 组件库
    */
-  componentLib = 'componentLib'
+  componentLib = 'componentLib',
+  /**
+   * 脚手架
+   */
+  cli = 'cli'
 }
 
 export const PROJECT_TYPE_LABEL = {
   [PROJECT_TYPE.classLib]: '类库',
-  [PROJECT_TYPE.componentLib]: '组件库'
+  [PROJECT_TYPE.componentLib]: '组件库',
+  [PROJECT_TYPE.cli]: '脚手架'
 };

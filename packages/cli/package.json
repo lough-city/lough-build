@@ -1,6 +1,6 @@
 {
   "name": "@lough/build-cli",
-  "version": "0.0.14",
+  "version": "0.0.15-beta.1",
   "main": "./bin/index.js",
   "types": "./bin/index.d.ts",
   "description": "This is a Build tool docked in lough.",
@@ -42,7 +42,7 @@
     "@babel/core": "^7.18.9",
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
-    "@lough/npm-operate": "^0.2.1",
+    "@lough/npm-operate": "0.2.2",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-image": "^2.1.1",
@@ -58,6 +58,7 @@
     "inquirer": "8.2.4",
     "ora": "5.4.1",
     "rollup": "^2.77.0",
+    "rollup-plugin-hashbang": "^3.0.0",
     "rollup-plugin-styles": "^4.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.34.1"

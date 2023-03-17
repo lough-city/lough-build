@@ -6,6 +6,7 @@ import { CONFIG_FILE_NAME } from '../constants/config';
 import { join } from 'path';
 import { copyFileSync } from '../utils/file';
 import { startLoadingSpinner, succeedLoadingSpinner, succeedSpinner } from '../utils/spinner';
+import external from './external';
 
 const PACKAGE = '@lough/build-cli';
 
@@ -57,8 +58,11 @@ const action = async () => {
   config.scripts.dev = 'lough-build dev';
   config.type = 'module';
   config.main = 'es/index.js';
-  config.unpkg = 'dist/index.min.js';
+  if (projectType !== PROJECT_TYPE.cli) config.unpkg = 'dist/index.min.js';
   config.types = 'es/index.d.ts';
+  if (projectType === PROJECT_TYPE.cli) {
+    config.bin = { ...(config.bin || {}), [config.name]: 'es/index.js' };
+  }
   npm.writeConfig(config);
   succeedLoadingSpinner('写入 package.json 成功');
 
@@ -67,6 +71,19 @@ const action = async () => {
     startLoadingSpinner(`开始写入 ${CONFIG_FILE_NAME}`);
     copyFileSync(join(__dirname, `../templates/${CONFIG_FILE_NAME}`), join(npm.options.dirName, CONFIG_FILE_NAME));
     succeedLoadingSpinner(`写入 ${CONFIG_FILE_NAME} 成功`);
+
+    external.action();
+  }
+
+  if (projectType === PROJECT_TYPE.cli) {
+    /* 打包配置写入 */
+    startLoadingSpinner(`开始写入 ${CONFIG_FILE_NAME}`);
+    copyFileSync(join(__dirname, `../templates/${CONFIG_FILE_NAME}`), join(npm.options.dirName, CONFIG_FILE_NAME), v =>
+      v.replace(/(style:)\strue?/, `$1 false`)
+    );
+    succeedLoadingSpinner(`写入 ${CONFIG_FILE_NAME} 成功`);
+
+    external.action();
   }
 
   succeedSpinner(chalk.green('Lough Build 初始化成功!'));

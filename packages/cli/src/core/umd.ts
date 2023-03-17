@@ -11,6 +11,7 @@ export const generateUmd = ({ input, globals, external, style, title, banner, co
 
   flow.inputOption
     .input(existsSync(join(rootPath, input.replace('.ts', '.umd.ts'))) ? input.replace('.ts', '.umd.ts') : input)
+    .shebang()
     .external(external)
     .switch(style, self => self.style())
     .image()
