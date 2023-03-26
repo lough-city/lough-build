@@ -11,7 +11,7 @@ const originBuild = async (options: IOptions) => {
   try {
     bundle = await rollup({ ...options, output: undefined });
     for (const outputOptions of options.output) {
-      const result = await bundle.write(outputOptions);
+      await bundle.write(outputOptions);
     }
   } catch (error) {
     buildFailed = true;

@@ -1,28 +1,27 @@
 {
   "name": "root",
-  "private": true,
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "prepare": "husky install",
+    "lint:es": "eslint -c .eslintrc.js --ext .ts,.tsx ./",
+    "lint:es-fix": "eslint --fix -c .eslintrc.js --ext .ts,.tsx ./"
+  },
+  "devDependencies": {
+    "@lough/commitlint-config": "^0.1.2",
+    "@lough/eslint-config": "^0.1.5",
+    "@types/node": "^18.7.12",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.8.7"
+  },
+  "private": true,
   "ignoreChanges": [
     "ignored-file",
     "**/__tests__/**",
     "**/*.md"
   ],
-  "devDependencies": {
-    "@lough/commitlint-config": "^0.1.1",
-    "@lough/eslint-config": "^0.1.0",
-    "@types/node": "^18.7.12",
-    "husky": "7.0.2",
-    "lerna": "^4.0.0",
-    "lint-staged": "11.1.2",
-    "prettier": "^2.7.1"
-  },
-  "scripts": {
-    "lint:es": "eslint -c .eslintrc.js --ext .ts,.tsx ./",
-    "lint:es-fix": "eslint --fix -c .eslintrc.js --ext .ts,.tsx ./",
-    "prepare": "husky install"
-  },
   "lint-staged": {
     "*.{ts,tsx}": [
       "eslint -c .eslintrc.js --ext .ts,.tsx"

@@ -1,12 +1,16 @@
-import { prompt } from 'inquirer';
-import chalk from 'chalk';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { Package } from '@lough/npm-operate';
+import chalk from 'chalk';
+import { prompt } from 'inquirer';
 import { PROJECT_TYPE, PROJECT_TYPE_LABEL } from '../constants';
 import { CONFIG_FILE_NAME } from '../constants/config';
-import { join } from 'path';
 import { copyFileSync } from '../utils/file';
 import { startLoadingSpinner, succeedLoadingSpinner, succeedSpinner } from '../utils/spinner';
 import external from './external';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const PACKAGE = '@lough/build-cli';
 
@@ -15,7 +19,7 @@ const getSub = (keyList: Array<string>) =>
     {
       type: 'list',
       name: 'key',
-      message: `Please select need initialized sub package:`,
+      message: `Please select need initialized package:`,
       choices: keyList
     }
   ]).then(res => res.key);
@@ -63,6 +67,7 @@ const action = async () => {
   if (projectType === PROJECT_TYPE.cli) {
     config.bin = { ...(config.bin || {}), [config.name]: 'es/index.js' };
   }
+  config.files = Array.from(new Set([...(config.files || [], 'dist', 'lib', 'es')]));
   npm.writeConfig(config);
   succeedLoadingSpinner('写入 package.json 成功');
 

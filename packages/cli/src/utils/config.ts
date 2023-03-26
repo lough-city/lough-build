@@ -1,9 +1,9 @@
+import { existsSync, readdirSync } from 'fs';
+import { join, resolve } from 'path';
 import { IPackage } from '@lough/npm-operate';
 import { bundleRequire } from 'bundle-require';
-import { GenerateConfig, LoughBuildConfig } from '../typings/config';
-import { join, resolve } from 'path';
-import { existsSync, readdirSync } from 'fs';
 import { CONFIG_FILE_NAME } from '../constants/config';
+import { GenerateConfig, LoughBuildConfig } from '../typings/config';
 
 export const getBanner = (config: IPackage) => {
   return `/*!

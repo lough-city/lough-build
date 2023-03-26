@@ -1,48 +1,39 @@
 {
   "name": "@lough/build-cli",
   "version": "0.0.15",
-  "main": "./bin/index.js",
-  "types": "./bin/index.d.ts",
   "description": "This is a Build tool docked in lough.",
   "author": {
     "name": "Lough",
     "email": "lough@nanzc.com",
     "home": "nanzc.com"
   },
-  "license": "MIT",
-  "bin": {
-    "lough-build": "./bin/index.js"
+  "homepage": "https://github.com/lough-city/lough-build",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lough-city/lough-build"
   },
+  "bugs": {
+    "url": "https://github.com/lough-city/lough-build/issues"
+  },
+  "type": "module",
   "files": [
     "bin"
   ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AnCIity/lough-build.git"
-  },
-  "homepage": "https://github.com/AnCIity/lough-build",
-  "bugs": {
-    "url": "https://github.com/AnCIity/lough-build/issues"
+  "main": "./bin/index.js",
+  "types": "./bin/index.d.ts",
+  "bin": {
+    "lough-build": "./bin/index.js"
   },
   "scripts": {
-    "build": "rimraf ./bin && tsc && node ./scripts/build.js",
     "prepublishOnly": "npm run build",
+    "build": "rimraf ./bin && tsc && node ./scripts/build.js",
     "test": "npm run build && npm link && lough-build"
-  },
-  "devDependencies": {
-    "@types/inquirer": "8.2.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.7.4"
   },
   "dependencies": {
     "@babel/core": "^7.18.9",
     "@babel/preset-react": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
-    "@lough/npm-operate": "0.2.2",
+    "@lough/npm-operate": "^0.3.0",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-image": "^2.1.1",
@@ -63,5 +54,15 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.34.1"
   },
+  "devDependencies": {
+    "@types/inquirer": "8.2.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "license": "MIT",
   "gitHead": "6658cc31bc2a5f5d815087a18193d4b5781a311d"
 }

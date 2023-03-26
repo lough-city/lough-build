@@ -1,8 +1,8 @@
 import { join } from 'path';
 import chokidar from 'chokidar';
-import build from './build';
-import { startSpinner } from '../utils/spinner';
 import createDebounceInterval from '../utils/debounceInterval';
+import { startSpinner } from '../utils/spinner';
+import build from './build';
 
 const buildDebounce = createDebounceInterval(build.action, { interval: 500 });
 

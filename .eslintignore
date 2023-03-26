@@ -1,8 +1,7 @@
-/node_modules
-/build
-/dist
-/lib
-/es
-/release
+node_modules
+release
+build
+dist
+lib
+es
 .eslintrc.js
-*.js

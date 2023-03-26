@@ -1,9 +1,13 @@
-import { Package } from '@lough/npm-operate';
 import { existsSync } from 'fs';
-import { join } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { Package } from '@lough/npm-operate';
 import { CONFIG_FILE_NAME } from '../constants/config';
 import { copyFileSync } from '../utils/file';
 import { startLoadingSpinner, succeedLoadingSpinner } from '../utils/spinner';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const action = async () => {
   const npm = new Package();

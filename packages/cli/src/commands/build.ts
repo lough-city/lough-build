@@ -1,7 +1,7 @@
 import { Package } from '@lough/npm-operate';
 import { generateUmd, generateUnpkg, generateCommonJS, generateESModule } from '../core';
-import { failLoadingSpinner, startLoadingSpinner, succeedLoadingSpinner } from '../utils/spinner';
 import { getGenerateConfig } from '../utils/config';
+import { failLoadingSpinner, startLoadingSpinner, succeedLoadingSpinner } from '../utils/spinner';
 
 const action = async () => {
   const rootPath = process.cwd();

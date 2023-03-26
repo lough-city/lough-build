@@ -1,17 +1,8 @@
 import { parse, join } from 'path';
-import { LoughRollup } from './rollup';
 import { GenerateConfig } from '../typings/config';
-import { removeDirOrFileSync } from '../utils/file';
+import { LoughRollup } from './rollup';
 
-export const generateESModule = ({
-  input,
-  globals,
-  external,
-  style,
-  styleDirList,
-  config,
-  rootPath
-}: GenerateConfig) => {
+export const generateESModule = ({ input, globals, external, style, styleDirList, config }: GenerateConfig) => {
   const flow = new LoughRollup();
 
   flow.inputOption

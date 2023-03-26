@@ -1,8 +1,7 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { LoughRollup } from './rollup';
 import { GenerateConfig } from '../typings/config';
-import { removeDirOrFileSync } from '../utils/file';
+import { LoughRollup } from './rollup';
 
 export const generateUmd = ({ input, globals, external, style, title, banner, config, rootPath }: GenerateConfig) => {
   const flow = new LoughRollup();
@@ -27,8 +26,6 @@ export const generateUmd = ({ input, globals, external, style, title, banner, co
     .assetFileNames()
     .file(file)
     .banner(banner);
-
-  // removeDirOrFileSync(join(rootPath, file));
 
   return flow.build();
 };

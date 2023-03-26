@@ -1,15 +1,15 @@
-import { Plugin, RollupOptions, ExternalOption, OutputPlugin } from 'rollup';
-import styles from 'rollup-plugin-styles';
-import autoprefixer from 'autoprefixer';
-import image from '@rollup/plugin-image';
-import resolve from '@rollup/plugin-node-resolve';
-import babel from '@rollup/plugin-babel';
-import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
-import typescript, { RPT2Options } from 'rollup-plugin-typescript2';
-import shebang from 'rollup-plugin-hashbang';
 import { writeFileSync, existsSync } from 'fs';
 import { join, resolve as pathResolve } from 'path';
+import babel from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs';
+import image from '@rollup/plugin-image';
+import json from '@rollup/plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
+import autoprefixer from 'autoprefixer';
+import { Plugin, RollupOptions, ExternalOption } from 'rollup';
+import shebang from 'rollup-plugin-hashbang';
+import styles from 'rollup-plugin-styles';
+import typescript, { RPT2Options } from 'rollup-plugin-typescript2';
 
 export class RollupInputOptions {
   options: RollupOptions = {};
@@ -59,7 +59,7 @@ export class RollupInputOptions {
 export const str = 'WAIT_REPLACE'`
           };
         },
-        renderChunk(code, chunk, options) {
+        renderChunk(code, chunk) {
           if (!chunk.fileName.includes('style/index.js')) return code;
           if (!chunk.isEntry) return code;
           return `import './index.css';`;
