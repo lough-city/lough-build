@@ -26,7 +26,7 @@ export const getTitle = (name: string) => {
 
 export const getLoughBuildConfig = async (rootPath: string) => {
   const loughConfigPath = join(rootPath, CONFIG_FILE_NAME);
-  if (!existsSync(loughConfigPath)) return undefined;
+  if (!existsSync(loughConfigPath)) return {} as Partial<LoughBuildConfig>;
 
   const {
     mod: { default: loughBuildConfig }
@@ -34,7 +34,7 @@ export const getLoughBuildConfig = async (rootPath: string) => {
     filepath: loughConfigPath
   });
 
-  return loughBuildConfig as LoughBuildConfig;
+  return (loughBuildConfig || {}) as Partial<LoughBuildConfig>;
 };
 
 const getComponentStyle = (componentDir: string) => {
@@ -55,11 +55,19 @@ export const getGenerateConfig = async (rootPath: string, config: IPackage) => {
   const componentDir = buildConfig?.componentDir ?? 'src/components';
   const styleDirList = existsSync(join(rootPath, componentDir)) ? getComponentStyle(join(rootPath, componentDir)) : [];
 
+  if (buildConfig.globals === true) {
+    //
+  }
+
+  if (buildConfig.external === true) {
+    //
+  }
+
   const generateConfig: Readonly<GenerateConfig> = {
-    input: buildConfig?.input ?? 'src/index.ts',
-    style: buildConfig?.style ?? false,
-    globals: buildConfig?.globals ?? {},
-    external: buildConfig?.external ?? [],
+    input: buildConfig.input ?? 'src/index.ts',
+    style: buildConfig.style ?? false,
+    globals: buildConfig.globals ?? {},
+    external: buildConfig.external ?? [],
     componentDir,
     styleDirList,
     config,

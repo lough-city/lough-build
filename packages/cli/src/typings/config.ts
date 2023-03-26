@@ -2,8 +2,8 @@ import { IPackage } from '@lough/npm-operate';
 
 export interface LoughBuildConfig {
   input: string;
-  external: Array<string>;
-  globals: Record<string, string>;
+  external: true | Array<string>;
+  globals: true | Record<string, string>;
   style: boolean;
   componentDir: string;
 }

@@ -8,10 +8,10 @@ const __dirname = dirname(__filename);
 
 const files = readdirSync(join(__dirname, '../src/templates'));
 
-mkdirSync(join(__dirname, '../bin/templates'));
+mkdirSync(join(__dirname, '../es/templates'));
 
 for (const f of files) {
-  copyFileSync(join(__dirname, '../src/templates/') + f, join(__dirname, '../bin/templates/') + f);
+  copyFileSync(join(__dirname, '../src/templates/') + f, join(__dirname, '../es/templates/') + f);
 }
 
 console.log(chalk.green('打包成功！'));

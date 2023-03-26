@@ -9,6 +9,8 @@ import { startLoadingSpinner, succeedLoadingSpinner } from '../utils/spinner';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// TODO: 调用时传递根目录、是否生成 external、globals 考虑合并到打包配置自动检测添加
+
 const action = async () => {
   const npm = new Package();
 
