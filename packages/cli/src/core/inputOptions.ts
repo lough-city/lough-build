@@ -40,7 +40,7 @@ export class RollupInputOptions {
   }
 
   shebang() {
-    this.addPlugin(shebang());
+    this.addPlugin((shebang as any).default());
     return this;
   }
 
@@ -111,7 +111,7 @@ export const str = 'WAIT_REPLACE'`
 
   babel() {
     this.addPlugin(
-      babel({
+      (babel as any).default({
         exclude: 'node_modules/**',
         babelHelpers: 'runtime',
         extensions: ['.ts', '.tsx'],

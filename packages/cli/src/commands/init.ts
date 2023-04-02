@@ -2,7 +2,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Package } from '@lough/npm-operate';
 import chalk from 'chalk';
-import { prompt } from 'inquirer';
+import inquirer from 'inquirer';
 import { PROJECT_TYPE, PROJECT_TYPE_LABEL } from '../constants';
 import { CONFIG_FILE_NAME } from '../constants/config';
 import { copyFileSync } from '../utils/file';
@@ -15,27 +15,31 @@ const __dirname = dirname(__filename);
 const PACKAGE = '@lough/build-cli';
 
 const getSub = (keyList: Array<string>) =>
-  prompt<{ key: string }>([
-    {
-      type: 'list',
-      name: 'key',
-      message: `Please select need initialized package:`,
-      choices: keyList
-    }
-  ]).then(res => res.key);
+  inquirer
+    .prompt<{ key: string }>([
+      {
+        type: 'list',
+        name: 'key',
+        message: `Please select need initialized package:`,
+        choices: keyList
+      }
+    ])
+    .then(res => res.key);
 
 const getProjectType = () =>
-  prompt<{ type: string }>([
-    {
-      type: 'list',
-      name: 'type',
-      message: `Please select project type:`,
-      choices: Object.keys(PROJECT_TYPE).map(key => ({
-        name: `${key} ${PROJECT_TYPE_LABEL[key as keyof typeof PROJECT_TYPE]}`,
-        value: PROJECT_TYPE[key as keyof typeof PROJECT_TYPE]
-      }))
-    }
-  ]).then(res => res.type);
+  inquirer
+    .prompt<{ type: string }>([
+      {
+        type: 'list',
+        name: 'type',
+        message: `Please select project type:`,
+        choices: Object.keys(PROJECT_TYPE).map(key => ({
+          name: `${key} ${PROJECT_TYPE_LABEL[key as keyof typeof PROJECT_TYPE]}`,
+          value: PROJECT_TYPE[key as keyof typeof PROJECT_TYPE]
+        }))
+      }
+    ])
+    .then(res => res.type);
 
 const action = async () => {
   let npm = new Package();
@@ -67,7 +71,7 @@ const action = async () => {
   if (projectType === PROJECT_TYPE.cli) {
     config.bin = { ...(config.bin || {}), [config.name]: 'es/index.js' };
   }
-  config.files = Array.from(new Set([...(config.files || [], 'dist', 'lib', 'es')]));
+  config.files = Array.from(new Set([...(config.files || []), 'dist', 'lib', 'es']));
   npm.writeConfig(config);
   succeedLoadingSpinner('写入 package.json 成功');
 
