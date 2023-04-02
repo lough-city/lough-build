@@ -77,7 +77,7 @@ const action = async () => {
     copyFileSync(join(__dirname, `../templates/${CONFIG_FILE_NAME}`), join(npm.options.dirName, CONFIG_FILE_NAME));
     succeedLoadingSpinner(`写入 ${CONFIG_FILE_NAME} 成功`);
 
-    external.action();
+    external.action({ rootPath: npm.options.dirName });
   }
 
   if (projectType === PROJECT_TYPE.cli) {
@@ -88,7 +88,7 @@ const action = async () => {
     );
     succeedLoadingSpinner(`写入 ${CONFIG_FILE_NAME} 成功`);
 
-    external.action();
+    external.action({ rootPath: npm.options.dirName, globals: false });
   }
 
   succeedSpinner(chalk.green('Lough Build 初始化成功!'));

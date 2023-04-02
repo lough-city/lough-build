@@ -2,7 +2,7 @@ import { parse, join } from 'path';
 import { GenerateConfig } from '../typings/config';
 import { LoughRollup } from './rollup';
 
-export const generateCommonJS = ({ input, globals, external, style, styleDirList, config }: GenerateConfig) => {
+export const generateCommonJS = ({ input, external, style, styleDirList, config }: GenerateConfig) => {
   const flow = new LoughRollup();
 
   flow.inputOption
@@ -22,7 +22,6 @@ export const generateCommonJS = ({ input, globals, external, style, styleDirList
   flow.outputOption
     .format(map => map.cjs)
     .preserveModules()
-    .globals(globals)
     .exports()
     .assetFileNames(({ name }) => {
       const { ext, dir, base } = parse(name as string);
@@ -30,8 +29,6 @@ export const generateCommonJS = ({ input, globals, external, style, styleDirList
       if (ext !== '.css') return '[name].[ext]';
       return join(dir, base);
     });
-
-  // removeDirOrFileSync(join(rootPath, 'lib'));
 
   return flow.build();
 };

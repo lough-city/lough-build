@@ -8,5 +8,5 @@
     // 编译过程中需要引入的库文件的列表
     "lib": ["ES6"]
   },
-  "include": ["./src/index.ts"]
+  "include": ["./src"]
 }

@@ -2,7 +2,7 @@ import { parse, join } from 'path';
 import { GenerateConfig } from '../typings/config';
 import { LoughRollup } from './rollup';
 
-export const generateESModule = ({ input, globals, external, style, styleDirList, config }: GenerateConfig) => {
+export const generateESModule = ({ input, external, style, styleDirList, config }: GenerateConfig) => {
   const flow = new LoughRollup();
 
   flow.inputOption
@@ -22,15 +22,12 @@ export const generateESModule = ({ input, globals, external, style, styleDirList
   flow.outputOption
     .format(map => map.es)
     .preserveModules()
-    .globals(globals)
     .exports()
     .assetFileNames(({ name }) => {
       const { ext, dir, base } = parse(name as string);
       if (ext !== '.css') return '[name].[ext]';
       return join(dir, base);
     });
-
-  // removeDirOrFileSync(join(rootPath, 'es'));
 
   return flow.build();
 };

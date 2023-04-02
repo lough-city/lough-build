@@ -9,10 +9,15 @@ import { startLoadingSpinner, succeedLoadingSpinner } from '../utils/spinner';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// TODO: 调用时传递根目录、是否生成 external、globals 考虑合并到打包配置自动检测添加
+interface IOptions {
+  rootPath?: string;
+  external?: boolean;
+  globals?: boolean;
+}
 
-const action = async () => {
-  const npm = new Package();
+const action = async (options: IOptions = {}) => {
+  const { rootPath, external = true, globals = true } = options;
+  const npm = new Package({ dirName: rootPath });
 
   startLoadingSpinner(`开始扫描 ${npm.name}`);
   const dependencies = Object.keys(npm.readConfig().dependencies || {});
@@ -24,24 +29,20 @@ const action = async () => {
 
   startLoadingSpinner(`开始写入 external`);
 
-  const external = dependencies.map(v => `'${v}'`).join(' ,');
-  const globals = dependencies
+  const externalStr = dependencies.map(v => `'${v}'`).join(' ,');
+  const globalsStr = dependencies
     .map(v => `'${v}': '${v.replace('@', '').replace(/[-_/]([a-z])/g, (_$0, $1) => $1.toUpperCase())}'`)
     .join(', ');
 
-  if (existsSync(configPath)) {
-    copyFileSync(configPath, configPath, v =>
-      v
-        .replace(/(external:)\s*\[[\s\S]*?\]/, `$1 [${external}]`)
-        .replace(/(globals:)\s*\{[\s\S]*?\}/, `$1 {${globals}}`)
-    );
-  } else {
-    copyFileSync(join(__dirname, `../templates/${CONFIG_FILE_NAME}`), join(npm.options.dirName, CONFIG_FILE_NAME), v =>
-      v
-        .replace(/(external:)\s*\[[\s\S]*?\]/, `$1 [${external}]`)
-        .replace(/(globals:)\s*\{[\s\S]*?\}/, `$1 {${globals}}`)
-    );
-  }
+  copyFileSync(
+    existsSync(configPath) ? configPath : join(__dirname, `../templates/${CONFIG_FILE_NAME}`),
+    configPath,
+    v => {
+      if (external) v = v.replace(/(external:)\s*\[[\s\S]*?\]/, `$1 [${externalStr}]`);
+      if (globals) v = v.replace(/(globals:)\s*\{[\s\S]*?\}/, `$1 {${globalsStr}}`);
+      return v;
+    }
+  );
 
   succeedLoadingSpinner(`写入 external 成功`);
 };

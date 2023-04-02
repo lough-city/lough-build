@@ -55,14 +55,6 @@ export const getGenerateConfig = async (rootPath: string, config: IPackage) => {
   const componentDir = buildConfig?.componentDir ?? 'src/components';
   const styleDirList = existsSync(join(rootPath, componentDir)) ? getComponentStyle(join(rootPath, componentDir)) : [];
 
-  if (buildConfig.globals === true) {
-    //
-  }
-
-  if (buildConfig.external === true) {
-    //
-  }
-
   const generateConfig: Readonly<GenerateConfig> = {
     input: buildConfig.input ?? 'src/index.ts',
     style: buildConfig.style ?? false,
