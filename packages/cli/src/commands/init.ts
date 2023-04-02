@@ -66,7 +66,7 @@ const action = async () => {
   config.scripts.dev = 'lough-build dev';
   config.type = 'module';
   config.main = 'es/index.js';
-  if (projectType !== PROJECT_TYPE.cli) config.unpkg = 'dist/index.min.js';
+  if (projectType !== PROJECT_TYPE.cli && projectType !== PROJECT_TYPE.nodeClassLib) config.unpkg = 'dist/index.min.js';
   config.types = 'es/index.d.ts';
   if (projectType === PROJECT_TYPE.cli) {
     config.bin = { ...(config.bin || {}), [config.name]: 'es/index.js' };
@@ -84,7 +84,7 @@ const action = async () => {
     external.action({ rootPath: npm.options.dirName });
   }
 
-  if (projectType === PROJECT_TYPE.cli) {
+  if (projectType === PROJECT_TYPE.cli || projectType === PROJECT_TYPE.nodeClassLib) {
     /* 打包配置写入 */
     startLoadingSpinner(`开始写入 ${CONFIG_FILE_NAME}`);
     copyFileSync(join(__dirname, `../templates/${CONFIG_FILE_NAME}`), join(npm.options.dirName, CONFIG_FILE_NAME), v =>

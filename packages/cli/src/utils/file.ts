@@ -25,7 +25,7 @@ export const copyFileSync = (fromPath: string, toPath: string, transform?: (v: s
 
   if (transform) writeContent = transform(writeContent);
 
-  if (fs.existsSync(fromPath)) removeDirOrFileSync(toPath);
+  if (fs.existsSync(toPath)) removeDirOrFileSync(toPath);
 
   fs.writeFileSync(toPath, writeContent, 'utf8');
 
