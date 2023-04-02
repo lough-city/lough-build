@@ -1,6 +1,6 @@
 {
   "name": "@lough/build-cli",
-  "version": "0.0.16-alpha.2",
+  "version": "0.1.0",
   "description": "This is a Build tool docked in lough.",
   "author": {
     "name": "Lough",
