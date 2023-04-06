@@ -1,11 +1,13 @@
-# `tsconfig`
+# @lough/tsconfig
 
-> TODO: description
+> This is extends tsconfig in lough.
 
-## Usage
+## Feature
 
-```
-const tsconfig = require('tsconfig');
+> Provide tsconfig extends.
 
-// TODO: DEMONSTRATE API
-```
+- `typescript`: `@lough/tsconfig/typescript`
+
+- `react`: `@lough/tsconfig/react`
+
+- `node`: `@lough/tsconfig/node`
