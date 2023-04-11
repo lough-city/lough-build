@@ -29,11 +29,12 @@ const action = async (options: IOptions = {}) => {
 
   startLoadingSpinner(`开始写入 external`);
 
-  const externalStr = dependencies.map(v => `'${v}'`).join(' ,');
+  const externalStr = dependencies.map(v => `'${v}'`).join(', ');
   const globalsStr = dependencies
     .map(v => `'${v}': '${v.replace('@', '').replace(/[-_/]([a-z])/g, (_$0, $1) => $1.toUpperCase())}'`)
     .join(', ');
 
+  // TODO: 如果存在配置根据配置是否有分别生成
   copyFileSync(
     existsSync(configPath) ? configPath : join(__dirname, `../templates/${CONFIG_FILE_NAME}`),
     configPath,
