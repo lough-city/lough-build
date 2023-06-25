@@ -2,7 +2,7 @@ import { parse, join } from 'path';
 import { GenerateConfig } from '../typings/config';
 import { LoughRollup } from './rollup';
 
-export const generateCommonJS = ({ input, external, style, styleDirList, config }: GenerateConfig) => {
+export const generateCommonJS = ({ input, external, style, terser, styleDirList, config }: GenerateConfig) => {
   const flow = new LoughRollup();
 
   flow.inputOption
@@ -28,7 +28,8 @@ export const generateCommonJS = ({ input, external, style, styleDirList, config 
 
       if (ext !== '.css') return '[name].[ext]';
       return join(dir, base);
-    });
+    })
+    .switch(terser, self => self.terser());
 
   return flow.build();
 };

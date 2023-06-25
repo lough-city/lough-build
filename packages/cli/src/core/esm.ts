@@ -2,7 +2,7 @@ import { parse, join } from 'path';
 import { GenerateConfig } from '../typings/config';
 import { LoughRollup } from './rollup';
 
-export const generateESModule = ({ input, external, style, styleDirList, config }: GenerateConfig) => {
+export const generateESModule = ({ input, external, terser, style, styleDirList, config }: GenerateConfig) => {
   const flow = new LoughRollup();
 
   flow.inputOption
@@ -27,7 +27,8 @@ export const generateESModule = ({ input, external, style, styleDirList, config 
       const { ext, dir, base } = parse(name as string);
       if (ext !== '.css') return '[name].[ext]';
       return join(dir, base);
-    });
+    })
+    .switch(terser, self => self.terser());
 
   return flow.build();
 };

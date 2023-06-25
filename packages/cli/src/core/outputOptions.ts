@@ -15,6 +15,11 @@ export class RollupOutputOptions {
     this.options.plugins.push(plugin);
   }
 
+  switch(use: boolean, callback: (self: RollupOutputOptions) => void) {
+    if (use) callback(this);
+    return this;
+  }
+
   format(map: (map: typeof FORMAT_TYPE) => FORMAT_TYPE, dir?: string) {
     this.options.format = map(FORMAT_TYPE);
     if (dir) {

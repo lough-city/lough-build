@@ -3,7 +3,17 @@ import { join } from 'path';
 import { GenerateConfig } from '../typings/config';
 import { LoughRollup } from './rollup';
 
-export const generateUmd = ({ input, globals, external, style, title, banner, config, rootPath }: GenerateConfig) => {
+export const generateUmd = ({
+  input,
+  globals,
+  external,
+  style,
+  terser,
+  title,
+  banner,
+  config,
+  rootPath
+}: GenerateConfig) => {
   const flow = new LoughRollup();
 
   const file = config.unpkg?.replace?.('.min', '') ?? 'dist/index.js';
@@ -25,7 +35,8 @@ export const generateUmd = ({ input, globals, external, style, title, banner, co
     .globals(globals)
     .assetFileNames()
     .file(file)
-    .banner(banner);
+    .banner(banner)
+    .switch(terser, self => self.terser());
 
   return flow.build();
 };
