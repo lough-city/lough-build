@@ -64,9 +64,14 @@ const action = async () => {
   if (!config.scripts) config.scripts = {};
   config.scripts.build = 'lough-build';
   config.scripts.dev = 'lough-build dev';
-  config.type = 'module';
-  config.main = 'es/index.js';
-  if (projectType !== PROJECT_TYPE.cli && projectType !== PROJECT_TYPE.nodeClassLib) config.unpkg = 'dist/index.min.js';
+  if (projectType === PROJECT_TYPE.cli || projectType === PROJECT_TYPE.nodeClassLib) {
+    config.type = 'module';
+    config.main = 'es/index.js';
+  } else {
+    config.main = 'lib/index.js';
+    config.module = 'es/index.js';
+    config.unpkg = 'dist/index.min.js';
+  }
   config.types = 'es/index.d.ts';
   if (projectType === PROJECT_TYPE.cli) {
     config.bin = { ...(config.bin || {}), [config.name]: 'es/index.js' };
