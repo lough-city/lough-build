@@ -9,6 +9,7 @@ export async function loadTsFileRuntime(tsFilePath: string) {
     input: tsFilePath,
     plugins: [
       typescript({
+        clean: true,
         check: false,
         tsconfigOverride: { compilerOptions: { target: 'ES2015', module: 'es2015' } }
       })

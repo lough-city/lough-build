@@ -9,7 +9,7 @@ export const generateESModule = ({ input, external, terser, style, styleDirList,
     .input([input, ...styleDirList])
     .shebang()
     .switch(!!config.types, self =>
-      self.typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } })
+      self.typescript({ jsx: 'preserve', clean: true, check: false, tsconfigOverride: { noEmit: true } })
     )
     .external(external)
     .switch(style, self => self.style({ split: true }))
