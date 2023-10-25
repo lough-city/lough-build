@@ -7,7 +7,12 @@ export async function loadTsFileRuntime(tsFilePath: string) {
   // 创建 Rollup 输入选项
   const inputOptions = {
     input: tsFilePath,
-    plugins: [typescript({ tsconfigOverride: { compilerOptions: { target: 'ES2015', module: 'es2015' } } })],
+    plugins: [
+      typescript({
+        check: false,
+        tsconfigOverride: { compilerOptions: { target: 'ES2015', module: 'es2015' } }
+      })
+    ],
     external: ['@lough/build-cli']
   };
 
