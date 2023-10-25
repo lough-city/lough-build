@@ -1,7 +1,7 @@
 import vm from 'vm';
 import { rollup } from 'rollup';
 import typescript from 'rollup-plugin-typescript2';
-import { defineConfig } from '..';
+import { defineConfig } from './defineConfig';
 
 export async function loadTsFileRuntime(tsFilePath: string) {
   // 创建 Rollup 输入选项

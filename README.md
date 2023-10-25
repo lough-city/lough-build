@@ -10,6 +10,7 @@
 2. `lough-build`：支持以下类型项目打包构建：
    - `classLib`：类库项目
    - `componentLib`：组件库项目
+   - `nodeClassLib`: Node 类库项目
    - `cli`：脚手架项目
 
 ## Install
@@ -47,7 +48,3 @@ Commands:
 `lough-build` 命令将会用于打包构建。
 
 执行 `lough-build init` 即可运行我们的初始化程序。
-
-## Plan
-
-- [ ] 生产项目开发及其打包支持
