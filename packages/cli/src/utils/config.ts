@@ -1,18 +1,25 @@
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 import { IPackage } from '@lough/npm-operate';
 import { bundleRequire } from 'bundle-require';
 import { CONFIG_FILE_NAME } from '../constants/config';
 import { GenerateConfig, LoughBuildConfig } from '../typings/config';
 
-export const getBanner = (config: IPackage) => {
+export const getBanner = (config: IPackage, copyright?: string) => {
+  const copyrightText = copyright
+    ? copyright
+        .split(/\r?\n/)
+        .map(item => (item ? `  * ${item}` : '  *'))
+        .join('\n')
+    : `  * Copyright 2021-present, ${(typeof config.author === 'string' ? config.author : config.author?.name) ?? ''}.
+  * All rights reserved.
+  *`;
+
   return `/*!
   *
   * ${config.name} ${config.version}
   *
-  * Copyright 2021-present, ${(typeof config.author === 'string' ? config.author : config.author?.name) ?? ''}.
-  * All rights reserved.
-  *
+${copyrightText}
   */`;
 };
 
@@ -54,17 +61,21 @@ export const getGenerateConfig = async (rootPath: string, config: IPackage) => {
   const buildConfig = await getLoughBuildConfig(rootPath);
   const componentDir = buildConfig?.componentDir ?? 'src/components';
   const styleDirList = existsSync(join(rootPath, componentDir)) ? getComponentStyle(join(rootPath, componentDir)) : [];
+  const copyright = existsSync(join(rootPath, 'LICENSE'))
+    ? readFileSync(join(rootPath, 'LICENSE'), { encoding: 'utf-8' })
+    : undefined;
 
   const generateConfig: Readonly<GenerateConfig> = {
     input: buildConfig.input ?? 'src/index.ts',
     style: buildConfig.style ?? false,
     globals: buildConfig.globals ?? {},
     external: buildConfig.external ?? [],
+    terser: buildConfig.terser ?? false,
     componentDir,
     styleDirList,
     config,
     title: getTitle(config.name),
-    banner: getBanner(config),
+    banner: getBanner(config, copyright),
     rootPath
   };
 
