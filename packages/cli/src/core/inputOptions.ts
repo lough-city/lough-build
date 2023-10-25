@@ -95,7 +95,7 @@ export const str = 'WAIT_REPLACE'`
   }
 
   typescript(params: RPT2Options & Record<string, any>) {
-    this.addPlugin(typescript(params));
+    this.addPlugin(typescript({ exclude: ['**/__tests__/**', '**/*.test.ts'], ...params }));
     return this;
   }
 
