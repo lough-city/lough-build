@@ -1,9 +1,9 @@
 import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 import { IPackage } from '@lough/npm-operate';
-import { bundleRequire } from 'bundle-require';
 import { CONFIG_FILE_NAME } from '../constants/config';
 import { GenerateConfig, LoughBuildConfig } from '../typings/config';
+import { loadTsFileRuntime } from './loadTsFile';
 
 export const getBanner = (config: IPackage, copyright?: string) => {
   const copyrightText = copyright
@@ -35,11 +35,7 @@ export const getLoughBuildConfig = async (rootPath: string) => {
   const loughConfigPath = join(rootPath, CONFIG_FILE_NAME);
   if (!existsSync(loughConfigPath)) return {} as Partial<LoughBuildConfig>;
 
-  const {
-    mod: { default: loughBuildConfig }
-  } = await bundleRequire({
-    filepath: loughConfigPath
-  });
+  const loughBuildConfig = await loadTsFileRuntime(loughConfigPath);
 
   return (loughBuildConfig || {}) as Partial<LoughBuildConfig>;
 };

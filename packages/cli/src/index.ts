@@ -7,7 +7,6 @@ import build from './commands/build';
 import dev from './commands/dev';
 import external from './commands/external';
 import init from './commands/init';
-import { LoughBuildConfig } from './typings/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,4 +27,4 @@ function start() {
 
 start();
 
-export const defineConfig = (config: Partial<LoughBuildConfig>) => config;
+export * from './utils/defineConfig';
