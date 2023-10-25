@@ -36,7 +36,7 @@ export default {
   },
   plugins: [
     hashbang(),
-    typescript({ jsx: 'preserve', check: false, tsconfigOverride: { noEmit: true } }),
+    typescript({ jsx: 'preserve', clean: true, check: false, tsconfigOverride: { noEmit: true } }),
     resolve(),
     babel({
       exclude: 'node_modules/**',
