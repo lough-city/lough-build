@@ -61,8 +61,14 @@ export const getGenerateConfig = async (rootPath: string, config: IPackage) => {
     ? readFileSync(join(rootPath, 'LICENSE'), { encoding: 'utf-8' })
     : undefined;
 
+  const input = buildConfig.input
+    ? typeof buildConfig.input === 'string'
+      ? [buildConfig.input]
+      : buildConfig.input
+    : ['src/index.ts'];
+
   const generateConfig: Readonly<GenerateConfig> = {
-    input: buildConfig.input ?? 'src/index.ts',
+    input: input,
     style: buildConfig.style ?? false,
     globals: buildConfig.globals ?? {},
     external: buildConfig.external ?? [],

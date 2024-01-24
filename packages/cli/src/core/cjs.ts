@@ -6,7 +6,7 @@ export const generateCommonJS = ({ input, external, style, terser, styleDirList,
   const flow = new LoughRollup();
 
   flow.inputOption
-    .input([input, ...styleDirList])
+    .input([...input, ...styleDirList])
     .shebang()
     .switch(!!config.types, self =>
       self.typescript({ jsx: 'preserve', clean: true, check: false, tsconfigOverride: { noEmit: true } })

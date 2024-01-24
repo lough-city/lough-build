@@ -7,7 +7,11 @@ export const generateUnpkg = ({ input, globals, external, style, title, banner, 
   const flow = new LoughRollup();
 
   flow.inputOption
-    .input(existsSync(join(rootPath, input.replace('.ts', '.umd.ts'))) ? input.replace('.ts', '.umd.ts') : input)
+    .input(
+      input.map(item =>
+        existsSync(join(rootPath, item.replace('.ts', '.umd.ts'))) ? item.replace('.ts', '.umd.ts') : item
+      )
+    )
     .shebang()
     .external(external)
     .switch(style, self => self.style({ minimize: true }))

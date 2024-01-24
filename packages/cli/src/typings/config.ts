@@ -1,7 +1,7 @@
 import { IPackage } from '@lough/npm-operate';
 
 export interface LoughBuildConfig {
-  input: string;
+  input: string | Array<string>;
   external: Array<string>;
   globals: Record<string, string>;
   terser: boolean;
@@ -10,6 +10,7 @@ export interface LoughBuildConfig {
 }
 
 export interface GenerateConfig extends LoughBuildConfig {
+  input: Array<string>;
   styleDirList: Array<string>;
   config: IPackage;
   title: string;
