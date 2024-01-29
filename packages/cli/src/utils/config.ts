@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from 'fs';
+import { existsSync, lstatSync, readFileSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 import { IPackage } from '@lough/npm-operate';
 import { CONFIG_FILE_NAME } from '../constants/config';
@@ -67,8 +67,20 @@ export const getGenerateConfig = async (rootPath: string, config: IPackage) => {
       : buildConfig.input
     : ['src/index.ts'];
 
+  const inputList: Array<string> = [];
+
+  input.forEach(path => {
+    if (lstatSync(path).isDirectory()) {
+      readdirSync(path).forEach(filename => {
+        inputList.push(join(path, filename));
+      });
+    } else {
+      inputList.push(path);
+    }
+  });
+
   const generateConfig: Readonly<GenerateConfig> = {
-    input: input,
+    input: inputList,
     style: buildConfig.style ?? false,
     globals: buildConfig.globals ?? {},
     external: buildConfig.external ?? [],
